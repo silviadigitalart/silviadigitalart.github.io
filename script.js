@@ -6,22 +6,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!entrySection || !mainContent) return;
 
-    mainContent.classList.add('hidden');
-    mainContent.style.display = 'none';
+    const ENTERED_KEY = 'portfolioEntered';
 
-    function enterPortfolio() {
+    function showPortfolio() {
         entrySection.style.display = 'none';
         mainContent.classList.remove('hidden');
         mainContent.style.display = 'block';
+        sessionStorage.setItem(ENTERED_KEY, '1');
+
+        const hashTarget = window.location.hash && document.querySelector(window.location.hash);
+        if (hashTarget) {
+            hashTarget.scrollIntoView();
+        }
     }
 
+    if (sessionStorage.getItem(ENTERED_KEY) === '1') {
+        showPortfolio();
+        return;
+    }
+
+    mainContent.classList.add('hidden');
+    mainContent.style.display = 'none';
+
     if (enterBtn) {
-        enterBtn.addEventListener('click', enterPortfolio);
+        enterBtn.addEventListener('click', showPortfolio);
     }
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && entrySection.style.display !== 'none') {
-            enterPortfolio();
+            showPortfolio();
         }
     });
 });
